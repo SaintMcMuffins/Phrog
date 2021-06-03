@@ -1,0 +1,88 @@
+import discord
+import os
+import time
+from discord.ext import commands
+from discord.utils import get
+from discord import FFmpegPCMAudio
+import subprocess
+import youtube_dl
+import shutil
+
+prefix= '.phrog '
+bot= commands.Bot(command_prefix=prefix)
+@bot.event
+async def on_ready():
+  print("You have summoned: " + bot.user.name +"\n")
+
+@bot.command(pass_context = True, aliases = ['j'])
+async def join(ctx):
+  global voice
+  channel = ctx.message.author.voice.channel
+  voice = get(bot.voice_clients, guild = ctx.guild)
+  if voice and voice.is_connected():
+    await voice.move_to(channel)
+  else:
+    voice = await channel.connect()
+
+  await ctx.send(f"Hopped in {channel}")
+
+
+
+@bot.command(pass_context = True, aliases = ['l', 'bye'])
+async def leave(ctx):
+  channel = ctx.message.author.voice.channel
+  voice = get(bot.voice_clients, guild = ctx.guild)
+
+  if voice and voice.is_connected():
+    await voice.disconnect()
+    print(f"Phrog has leaped out {channel}")
+    await ctx.send(f"Hopped away")
+  else:
+    print("Phrog was not in a vc?????")
+    await ctx.send("not in a vc >:(")
+
+@bot.command(pass_context=True, aliases=['meh', 'mweeh'])
+async def mweh(ctx):
+  global voice
+  channel = ctx.message.author.voice.channel
+  voice = get(bot.voice_clients, guild=ctx.guild)
+  if voice and voice.is_connected():
+    await voice.move_to(channel)
+  else:
+    voice = await channel.connect()
+  await ctx.send(f"Hopped in {channel}")
+
+  if(ctx.author.voice):
+      source = FFmpegPCMAudio('mweh.wav')
+      player = voice.play(source)
+  time.sleep(5)
+  await voice.disconnect()
+
+
+@bot.command(pass_context=True)
+async def sound(sounds):
+  async def sounds(ctx):
+    global voice
+    channel = ctx.message.author.voice.channel
+    voice = get(bot.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+      await voice.move_to(channel)
+    else:
+      voice = await channel.connect()
+    await ctx.send(f"Hopped in {channel}")
+
+    if (ctx.author.voice):
+      source = FFmpegPCMAudio(sounds + '.wav')
+      player = voice.play(source)
+    time.sleep(5)
+    await voice.disconnect()
+
+
+
+
+
+
+
+
+
+
